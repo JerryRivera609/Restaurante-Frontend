@@ -1,8 +1,6 @@
-export interface Producto{
+export interface Empleado{
     id: number;
-    nombre: string;
-    descripcion: string;
-    img: string;
-    precio: number;
-    tipo: 'cocina' | 'frios' | 'bar';
+    email: string;
+    contrasenia: string;
+    rol: 'Cocina' | 'Bar' | 'Mozo' | 'Frios';
 }
