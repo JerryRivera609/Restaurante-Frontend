@@ -15,8 +15,7 @@ const Login = () => {
         // Simular login exitoso
         const usuarioTemporal = {
             email: email || "admin@brutal.com",
-            rol: "COCINA", //AQUI USO LOS ROLES QUE YA NADA MÁS FALTA ESO PARA CULMINAAAAAAAR
-                            // PROFESORA ANITA 20 POL FAVOOOOOOL 😭😭😭😭😭
+            rol: "ADMINISTRADOR", //AQUI USO LO
         };
 
         localStorage.setItem("token", "fake-token-desarrollo");

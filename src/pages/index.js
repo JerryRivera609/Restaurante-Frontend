@@ -6,3 +6,4 @@ export {default as Cold } from "./Cold";
 export {default as Bar } from "./Bar";
 export {default as Bill } from "./Bill";
 export {default as Login } from "./login";
+export {default as Admin } from "./Admin";

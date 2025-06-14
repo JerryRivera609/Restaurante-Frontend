@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { Home, Auth, Orders, Hot, Cold, Bar, Bill, Login } from "./pages";
+import { Home, Auth, Orders, Hot, Cold, Bar, Bill, Login, Admin} from "./pages";
 import Header from "./components/shared/Header";
 import BottonNav from "./components/shared/BottonNav";
 
@@ -13,6 +13,7 @@ function AppWrapper() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/Admin/*" element={<Admin />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/hot" element={<Hot />} />
         <Route path="/cold" element={<Cold />} />
