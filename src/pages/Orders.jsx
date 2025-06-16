@@ -91,13 +91,6 @@ const Orders = () => {
 
             const pedidoCreado = await responsePedido.json();
 
-            // Paso 2: Crear los detalles del pedido
-            //const detalles = pedido.map((item) => ({
-            //    idProducto: item.id,
-            //    cantidad: item.cantidad,
-            //    precio: item.precio,
-            //}));
-
             await fetch("http://localhost:8080/api/detallepedido/guardar", {
                 method: "POST",
                 headers: {
@@ -112,6 +105,22 @@ const Orders = () => {
                     }))
                 }),
             });
+
+            // aqui creo la factura del pedido realizado
+            await fetch("http://localhost:8080/api/factura/guardar",{
+                method: "POST",
+                headers:{"Content-Type": "application/json"},
+                //BODY
+                body: JSON.stringify({
+                    fecha: new Date().toISOString(),
+                    precioTotal: pedido.reduce((acc, item) => acc + item.precio * item.cantidad, 0).toFixed(2),
+                    idPedido: pedidoCreado.id,
+                    estado: "PENDIENTE",
+                    medioDePago: "PENDIENTE",
+                }),
+                
+            });
+            
 
             alert("Pedido registrado correctamente ✅");
             setPedido([]);

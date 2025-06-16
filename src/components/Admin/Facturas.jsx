@@ -1,9 +1,10 @@
 
 function Facturas() {
     return (
-        <div>
-            <h1>Facturas</h1>
-            <p>Esta es la página de administración de facturas.</p>
+        <div className="p-5">
+            <section className="flex flex-col justify-center text-center items-centerll item">
+                <h2 className="text-3xl font-apple">Administración Financiera</h2>
+            </section>
         </div>
     );
 }

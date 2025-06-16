@@ -10,7 +10,7 @@ function AppWrapper() {
   return (
     <>
       {!hideLayout && <Header />}
-      <Routes>
+      <Routes >
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/Admin/*" element={<Admin />} />

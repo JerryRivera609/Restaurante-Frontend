@@ -17,7 +17,7 @@ function Admin() {
                     <NavLink
                         to="/admin/ingresos"
                         className={({ isActive }) =>
-                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all duration-300 border-l-4 
+                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all ease-out duration-700 border-l-4 
                             ${isActive ? 'border-yellow-500 text-yellow-500 bg-[#444444]' : 'border-transparent text-gray-400 hover:bg-yellow-500 hover:text-white'}`
                         }>
                         <FaMoneyBillTrendUp />
@@ -25,21 +25,21 @@ function Admin() {
                     </NavLink>
                     <NavLink to="/admin/empleado"
                         className={({ isActive }) =>
-                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all duration-300 border-l-4 
+                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all ease-out duration-300 border-l-4 
                             ${isActive ? 'border-yellow-500 text-yellow-500 bg-[#444444]' : 'border-transparent text-gray-400 hover:bg-yellow-500 hover:text-white'}`
                         }>
                         <FaUsers />Empleado
                     </NavLink>
                     <NavLink to="/admin/factura"
                         className={({ isActive }) =>
-                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all duration-300 border-l-4 
+                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all ease-out duration-300 border-l-4 
                             ${isActive ? 'border-yellow-500 text-yellow-500 bg-[#444444]' : 'border-transparent text-gray-400 hover:bg-yellow-500 hover:text-white'}`
                         }>
                         <RiBillFill />Facturas
                     </NavLink>
                     <NavLink to="/admin/productos"
                         className={({ isActive }) =>
-                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all duration-300 border-l-4 
+                            `flex items-center justify-start gap-3 px-8 py-2 text-2xl transition-all ease-out duration-300 border-l-4 
                             ${isActive ? 'border-yellow-500 text-yellow-500 bg-[#444444]' : 'border-transparent text-gray-400 hover:bg-yellow-500 hover:text-white'}`
                         }>
                         <AiFillProduct />Productos
@@ -47,7 +47,7 @@ function Admin() {
                 </nav>
             </div>
 
-            <div className='flex-6/8'>
+            <div className='w-full flex-6/8'>
                 {/* Sub rutas dentro de /admin */}
                 <Routes>
                     <Route path="empleado" element={<Empleado />} />
