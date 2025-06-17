@@ -12,7 +12,7 @@ import { AiFillProduct } from "react-icons/ai";
 function Admin() {
     return (
         <section className="bg-[#1f1f1f] h-[calc(100vh-8.5rem)] text-white flex">
-            <div className='flex p-4 flex-2/8'>
+            <div className="flex p-4 flex-2/8">
                 <nav className='flex flex-col w-full gap-3 text-gray-400 justify-evenly'>
                     <NavLink
                         to="/admin/ingresos"
@@ -47,7 +47,7 @@ function Admin() {
                 </nav>
             </div>
 
-            <div className='w-full flex-6/8'>
+            <div className="w-full flex-6/8 bg-[url('/fondo.jpg')] bg-cover bg-center">
                 {/* Sub rutas dentro de /admin */}
                 <Routes>
                     <Route path="empleado" element={<Empleado />} />
