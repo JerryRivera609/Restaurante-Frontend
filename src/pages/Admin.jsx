@@ -13,7 +13,7 @@ function Admin() {
     return (
         <section className="bg-[url('/fondo.jpg')] bg-cover bg-center h-[calc(100vh-8.5rem)] text-white flex">
             <div className='flex w-full p-6 bg-white bg-opacity-0'>
-                
+
                 <div className='flex w-full overflow-hidden bg-black border-2 border-zinc-800 bg-opacity-5 rounded-xl'>
                     <div className="flex flex-2/8 backdrop-blur-md">
                         <nav className='flex flex-col w-full gap-3 text-gray-400 justify-evenly'>
@@ -51,7 +51,7 @@ function Admin() {
                     </div>
 
                     <div className="w-full overflow-x-auto flex-6/8 backdrop-blur-sm">
-                        {/* Sub rutas dentro de /admin */}
+                        
                         <Routes>
                             <Route path="empleado" element={<Empleado />} />
                             <Route path="factura" element={<Facturas />} />
@@ -60,11 +60,13 @@ function Admin() {
                         </Routes>
                     </div>
                 </div>
-                <section className='flex items-center justify-center flex-1 w-16'> 
+                <section className='flex items-center justify-center flex-1 w-16'>
                     <h2 className='text-6xl rotate-90 writing-vertical-rl'>Administration</h2>
                 </section>
             </div>
+            
         </section>
+
     );
 }
 

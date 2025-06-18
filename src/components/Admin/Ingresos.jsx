@@ -1,11 +1,42 @@
+import React, { useState } from 'react';
 import { Wallet, CalendarDays, Plus } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+
 
 function Ingresos() {
+    const [fecha, setFecha] = useState(new Date());
+    const ReadOnlyInput = React.forwardRef(({ value, onClick }, ref) => (
+        <input
+            className="p-3 text-xl text-center bg-black border-2 w-36 border-zinc-400 bg-opacity-10 backdrop-blur-sm rounded-xl form-control transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_10px_rgba(255,255,255,0.9)]"
+            onClick={onClick}
+            value={value}
+            ref={ref}
+            readOnly
+            style={{ cursor: 'pointer' }}
+        />
+    ));
+
     return (
-        <div className="min-h-screen p-6 ">
-            <section className="mb-8">
-                <h2 className="mb-1 text-4xl font-semibold text-gray-800 font-apple">INGRESOS</h2>
-                <p className="text-sm text-gray-500">Resumen financiero general</p>
+        <div className="relative p-6 z-100">
+            <section className="flex justify-between mb-8">
+                <div>
+                    <h2 className="mb-1 text-4xl font-semibold text-white font-apple">INGRESOS</h2>
+                    <p className="text-sm text-gray-100">Resumen financiero general</p>
+                </div>
+                <div className='flex items-center justify-center gap-4 pr-10'>
+                    <button className="relative backdrop-blur-xl text-white font-semibold p-3 rounded-2xl flex items-center bg-white bg-opacity-15 justify-center transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-4px_5px_rgba(255,255,255,0.9)]"
+                    > Buscar</button>
+                    <DatePicker
+                        selected={fecha}
+                        onChange={(date) => setFecha(date)}
+                        dateFormat="dd-MM-yyyy"
+                        maxDate={new Date()}
+                        showPopperArrow={false}
+                        customInput={<ReadOnlyInput />}
+                    />
+                </div>
             </section>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -34,31 +65,6 @@ function Ingresos() {
                     <p className="text-3xl font-bold text-gray-800">S/ 259.00</p>
                 </div>
             </div>
-
-            <section className="mt-10">
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="flex items-center gap-2 text-xl font-semibold text-gray-800">
-                        <CalendarDays className="w-5 h-5" /> Ingresos por Fecha
-                    </h3>
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
-                        <Plus className="w-4 h-4" /> Registrar ingreso
-                    </button>
-                </div>
-                <div className="overflow-hidden bg-white divide-y divide-gray-100 shadow-sm rounded-xl">
-                    <div className="flex items-center justify-between p-4">
-                        <span className="text-gray-700">17 junio 2025</span>
-                        <span className="font-medium text-green-600">S/ 250.00</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4">
-                        <span className="text-gray-700">16 junio 2025</span>
-                        <span className="font-medium text-green-600">S/ 120.00</span>
-                    </div>
-                    <div className="flex items-center justify-between p-4">
-                        <span className="text-gray-700">15 junio 2025</span>
-                        <span className="font-medium text-green-600">S/ 90.00</span>
-                    </div>
-                </div>
-            </section>
         </div>
     );
 }
