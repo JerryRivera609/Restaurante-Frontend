@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { TiHome } from "react-icons/ti";
 import { FaHotjar } from "react-icons/fa";
 import { PiThermometerColdFill } from "react-icons/pi";
@@ -22,44 +22,81 @@ const BottomNav = () => {
     const isCajero = rol === 'CAJERO';
 
     return (
-        <nav className="bg-[#1a1a1a] fixed bottom-0 left-0 right-0 flex justify-around h-14 py-2 flex-wrap">
-            
-            {(isAdmin) && (
-                <Link to="/admin" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
-                    <MdAdminPanelSettings className="w-5 h-5" /> Admin
-                </Link>
+        <nav className="bg-[#1a1a1a] fixed bottom-0 left-0 right-0 flex justify-around h-16 py-2 flex-wrap">
+
+
+            {isAdmin && (
+                <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                        `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                        ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                    }
+                >
+                    <MdAdminPanelSettings className="w-5 h-5" />
+                    Admin
+                </NavLink>
             )}
             {(isAdmin || isCocina || isFrios || isBar || isCajero) && (
-                <Link to="/home" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
+                <NavLink to="/home" 
+                className={({ isActive }) =>
+                    `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                    ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                }
+            >
                     <TiHome /> Home
-                </Link>
+                </NavLink>
             )}
             {(isAdmin || isCocina) && (
-                <Link to="/hot" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
+                <NavLink to="/hot" 
+                className={({ isActive }) =>
+                    `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                    ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                }
+            >
                     <FaHotjar className="w-5 h-5" /> Hot
-                </Link>
+                </NavLink>
             )}
-            
+
             {(isAdmin || isFrios) && (
-                <Link to="/cold" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
+                <NavLink to="/cold"
+                className={({ isActive }) =>
+                    `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                    ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                }
+            >
                     <PiThermometerColdFill className="w-5 h-5" /> Cold
-                </Link>
+                </NavLink>
             )}
-            
+
             {(isAdmin || isBar) && (
-                <Link to="/bar" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
+                <NavLink to="/bar"
+                className={({ isActive }) =>
+                    `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                    ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                }>
                     <BiSolidDrink className="w-5 h-5" /> Bar
-                </Link>
+                </NavLink>
             )}
             {(isAdmin || isMesero) && (
-                <Link to="/orders" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
+                <NavLink to="/orders"
+                className={({ isActive }) =>
+                    `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                    ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                }
+            >
                     <FaConciergeBell className="w-5 h-5" /> Orders
-                </Link>
+                </NavLink>
             )}
             {(isAdmin || isCajero) && (
-                <Link to="/bill" className="text-white flex gap-1 w-[100px] justify-center items-center p-1 rounded-md">
+                <NavLink to="/bill"
+                className={({ isActive }) =>
+                    `flex items-center w-[150px] justify-center p-3 gap-1 rounded-2xl transition-all ease-out duration-700
+                    ${isActive ? ' text-white bg-opacity-0 shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-5px_7px_rgba(255,255,255,0.9)]' : 'border-transparent text-gray-400 hover:bg-black/50 hover:scale-110 hover:text-white'}`
+                }
+            >
                     <AiOutlineContainer className="w-5 h-5" /> Bill
-                </Link>
+                </NavLink>
             )}
         </nav>
     );

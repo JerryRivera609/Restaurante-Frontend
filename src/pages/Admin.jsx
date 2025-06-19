@@ -11,7 +11,7 @@ import { AiFillProduct } from "react-icons/ai";
 
 function Admin() {
     return (
-        <section className="bg-[url('/fondo.jpg')] bg-cover bg-center h-[calc(100vh-8.5rem)] text-white flex">
+        <section className="bg-[url('/fondo.jpg')] bg-cover bg-center h-[calc(100vh-9rem)] text-white flex">
             <div className='flex w-full p-6 bg-white bg-opacity-0'>
 
                 <div className='flex w-full overflow-hidden bg-black border-2 border-zinc-800 bg-opacity-5 rounded-xl'>

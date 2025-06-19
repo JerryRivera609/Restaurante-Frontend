@@ -41,7 +41,7 @@ const Login = () => {
                         placeholder="Correo"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
+                        
                         className="px-4 py-2 text-black placeholder-black rounded-lg bg-white/20 focus:outline-none"
                     />
                     <input
@@ -49,7 +49,7 @@ const Login = () => {
                         placeholder="Contraseña"
                         value={contrasenia}
                         onChange={(e) => setContrasenia(e.target.value)}
-                        required
+                        
                         className="px-4 py-2 text-black placeholder-black rounded-lg bg-white/20 focus:outline-none"
                     />
                     <button
