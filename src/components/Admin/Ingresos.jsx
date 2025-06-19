@@ -19,7 +19,7 @@ function Ingresos() {
     ));
 
     return (
-        <div className="relative p-6 z-100">
+        <div className="relative p-6">
             <section className="flex justify-between mb-8">
                 <div>
                     <h2 className="mb-1 text-4xl font-semibold text-white font-apple">INGRESOS</h2>
