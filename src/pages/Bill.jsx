@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineContainer } from "react-icons/ai";
 import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { FaCircle } from "react-icons/fa";
@@ -6,107 +6,92 @@ import { PiCurrencyCircleDollarDuotone } from "react-icons/pi";
 import { FaRegCreditCard } from "react-icons/fa";
 
 const Bill = () => {
-    return (
-        <section className="bg-[#1f1f1f] h-[calc(100vh-5rem)] overflow-hidden flex flex-col gap-2">
-            <div className="flex items-center justify-between w-full h-16 px-20 py-5 shadow-md">
-                <div className="flex items-center gap-4 text-white">
-                <AiOutlineContainer className="w-8 h-7" />
-                    <h2 className="text-3xl">Bill</h2>
-                </div>
-                <div className="flex text-white gap-7">
-                    <button className="hover:bg-[#383838] text-[#ababab] text-md p-2 rounded-[10px] transition-all duration-700 ">In Progress</button>
-                    <button className="hover:bg-[#383838] text-[#ababab] text-md p-2 rounded-[10px] transition-all duration-700">Completed</button>
-                </div>
-            </div>
+    const [facturas, setFacturas] = useState([]);
+    const [estadoFiltro, setEstadoFiltro] = useState("PENDIENTE");
 
-            {/* Facturas */}
-            <div className="flex justify-around w-full p-2 overflow-auto">
-                <div className="bg-[#cccccc] text-black p-3 rounded-md w-[400px]">
-                    <div className="flex items-center justify-center gap-2 m-4 text-3xl text-center">
-                        <MdOutlineRestaurantMenu className='text-black h-7 w-7' />
-                        <h2>Brutal</h2>
-                    </div>
-                    <div className="flex justify-between w-full px-4">
-                        <div className="flex flex-col mb-6 text-sm text-start">
-                            <p>Ticket id: #01</p>
-                            <p>Table Number: 04</p>
-                            <p>Date: May 08, 2025 12:15 PM</p>
-                        </div>
-                        <div className="justify-end text-end">
-                            <p>Status:</p>
-                            <div className="flex items-center p-1 bg-green-500 rounded-md">
-                                <FaCircle className="h-3 text-white" />
-                                <p className="text-white text-md rounded-xl">Pending</p>
+    useEffect(() => {
+        fetch("http://localhost:8080/api/factura/detalleFactura")
+            .then(res => res.json())
+            .then(data => {
+                const pendientes = data.filter(f => f.estado === estadoFiltro);
+                setFacturas(pendientes);
+            })
+            .catch(err => console.error("Error:", err));
+    }, [estadoFiltro]);
+
+    return (
+        <section className="bg-[#1f1f1f] min-h-screen overflow-y-auto flex flex-col gap-4 py-6 px-4">
+            <header className="flex items-center justify-between w-full px-4 text-white">
+                <div className="flex items-center gap-3">
+                    <AiOutlineContainer className="w-8 h-8" />
+                    <h2 className="text-3xl font-bold">Boletas Pendientes</h2>
+                </div>
+            </header>
+
+            {facturas.length === 0 ? (
+                <p className="mt-10 text-center text-white">No hay boletas pendientes 💤</p>
+            ) : (
+                <div className="flex flex-wrap justify-center gap-6">
+                    {facturas.map((factura) => (
+                        <div key={factura.id} className="bg-white text-black rounded-md p-5 w-[400px] shadow-lg">
+                            <div className="flex items-center justify-center gap-2 mb-4 text-2xl font-bold">
+                                <MdOutlineRestaurantMenu className="text-black" />
+                                <h2>Brutal</h2>
+                            </div>
+
+                            <div className="flex justify-between mb-4 text-sm">
+                                <div>
+                                    <p><strong>Factura ID:</strong> #{factura.id}</p>
+                                    <p><strong>Mesa:</strong> {factura.pedidoInfo?.numeroMesa ?? "No asignada"}</p>
+                                    <p><strong>Fecha:</strong> {new Date(factura.fecha).toLocaleString()}</p>
+                                </div>
+                                <div className="text-end">
+                                    <p><strong>Estado:</strong></p>
+                                    <div className="flex items-center gap-1 px-2 py-1 text-xs font-semibold text-white bg-yellow-500 rounded-md">
+                                        <FaCircle className="w-2 h-2" />
+                                        <span>{factura.estado}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 py-1 mb-2 text-sm font-semibold text-center bg-gray-200">
+                                <div>Producto</div>
+                                <div>Cant.</div>
+                                <div>Precio</div>
+                            </div>
+
+                            {factura.pedidoInfo.detalles.map((d, i) => (
+                                <div key={i} className="grid grid-cols-3 mb-1 text-sm text-center">
+                                    <div>{d.nombreCompleto}</div>
+                                    <div>{d.cantidad}</div>
+                                    <div>S/. {d.precio.toFixed(2)}</div>
+                                </div>
+                            ))}
+
+                            <hr className="my-3 border-gray-400" />
+
+                            <div className="flex justify-between text-lg font-bold">
+                                <span>Total:</span>
+                                <span>S/. {factura.precioTotal.toFixed(2)}</span>
+                            </div>
+
+                            <div className="flex justify-around mt-4 text-white">
+                                <button className="px-3 py-1 rounded-md bg-gradient-to-r from-purple-600 to-green-400">
+                                    Yape / Plin
+                                </button>
+                                <button className="flex items-center gap-1 px-3 py-1 bg-orange-500 rounded-md">
+                                    <PiCurrencyCircleDollarDuotone className="w-5 h-5" /> Efectivo
+                                </button>
+                                <button className="flex items-center gap-1 px-3 py-1 bg-blue-600 rounded-md">
+                                    <FaRegCreditCard className="w-5 h-5" /> Tarjeta
+                                </button>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="flex mb-2">
-                        <div className="flex-[6] bg-red-500 text-start pl-2">Description</div>
-                        <div className="flex-[2] bg-green-500 text-center">Cant.</div>
-                        <div className="flex-[2] bg-blue-600 text-center">Price</div>
-                    </div>
-                    <div className="flex mb-2 text-sm">
-                        <div className="flex-[6] pl-2 flex flex-col  gap-2">
-                            <p>Lomo Saltado</p>
-                            <p>Ceviche Clasico</p>
-                            <p>Sopa Criolla</p>
-                            <p>Ensala César</p>
-                            <p>Pisco Sour</p>
-                            <p>Mojito</p>
-                        </div>
-                        <div className="flex-[2] text-center flex flex-col  gap-2">
-                            <p>01</p>
-                            <p>01</p>
-                            <p>01</p>
-                            <p>01</p>
-                            <p>01</p>
-                            <p>01</p>
-                        </div>
-                        <div className="flex-[2] text-center flex flex-col  gap-2">
-                            <p>S/. 25</p>
-                            <p>S/. 22</p>
-                            <p>S/. 18</p>
-                            <p>S/. 16</p>
-                            <p>S/. 14</p>
-                            <p>S/. 13</p>
-                        </div>
-                    </div>
-
-                    <hr className="border-black"/>
-
-                    {/* Total */}
-                    <div>
-                        {/*<div className="flex justify-between w-full px-1">
-                            <p>IGV 18%</p>
-                            <p>S/. 19.44</p>
-                        </div>
-
-                        <hr className="border-black"/>
-
-                        <div className="flex justify-between w-full px-1">
-                            <p>Sub Total</p>
-                            <p>S/. 108</p>
-                        </div>
-                        */}
-                        <hr className="border-black"/>
-
-                        <div className="flex justify-between w-full px-1">
-                            <p>Total</p>
-                            <p>S/. 108.00</p>	
-                        </div>
-                    </div>
-
-                    {/* Botones de Accion */}
-                    <div className="flex justify-around py-4">
-                        <button className="p-2 text-white rounded-md bg-gradient-to-r from-purple-600 to-green-400">Yape / Plin</button>
-                        <button className="flex items-center gap-1 p-2 text-white bg-orange-400 rounded-md"> <PiCurrencyCircleDollarDuotone className="w-6 h-6" /> Efectivo</button>
-                        <button className="flex gap-1 p-2 text-white bg-blue-600 rounded-md"><FaRegCreditCard className="w-6 h-6" /> Tarjeta</button>
-                    </div>
+                    ))}
                 </div>
-            </div>
+            )}
         </section>
     );
-}
+};
 
 export default Bill;
