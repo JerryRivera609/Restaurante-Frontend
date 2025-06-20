@@ -17,6 +17,7 @@ function Ingresos() {
             style={{ cursor: 'pointer' }}
         />
     ));
+    
 
     return (
         <div className="relative p-6">
