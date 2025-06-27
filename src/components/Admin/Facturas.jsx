@@ -87,7 +87,7 @@ function Facturas() {
                         </tr>
                     </thead>
                     <tbody className="text-center">
-                        {facturas.map((fac) => (
+                        {facturas.map(fac => (
                             <tr key={fac.id} className="hover:bg-gray-700">
                                 <td className="px-4 py-2 border border-white">{fac.fechaHora}</td>
                                 <td className="px-4 py-2 border border-white">{fac.id}</td>
