@@ -45,6 +45,35 @@ function Facturas() {
         };
     },[]);
 
+    const FormatearFecha = (fecha) =>{
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+    };
+    const formatearFechaDesdeISO = (isoString) => {
+        const fecha = new Date(isoString);
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+    };
+    
+
+    const handleBuscar = () => {
+        const fechaFormateada = FormatearFecha(fecha);
+    
+        fetch(`http://localhost:8080/api/factura/fecha?fecha=${encodeURIComponent(fechaFormateada)}`)
+            .then(res => res.json())
+            .then(data => {
+                setFacturas(data);
+            })
+            .catch(err => {
+                console.error("Error al buscar facturas por fecha:", err);
+            });
+    };
+    
+
     return (
         <div className="p-5">
             <section className="flex justify-between mb-8">
@@ -55,8 +84,11 @@ function Facturas() {
                 <div className='flex '>
                     
                     <div className='flex items-center justify-center gap-4 pr-10'>
-                        <button className="relative backdrop-blur-xl text-white font-semibold p-3 rounded-2xl flex items-center bg-white/20 justify-center transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-4px_5px_rgba(255,255,255,0.9)]"
-                        > Buscar</button>
+                        <button 
+                        onClick={handleBuscar}
+                        className="relative backdrop-blur-xl text-white font-semibold p-3 rounded-2xl flex items-center bg-white/20 justify-center transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-4px_5px_rgba(255,255,255,0.9)]">
+                            Buscar
+                        </button>
                         <DatePicker
                             selected={fecha}
                             onChange={(date) => setFecha(date)}
@@ -68,7 +100,8 @@ function Facturas() {
                     </div>
 
                     <div>
-                        <button className='relative flex items-center justify-center gap-2 p-4 text-xl font-bold text-green-700 transition-all duration-700 hover:bg-green-700 bg-white/80 backdrop-blur-xl rounded-2xl hover:text-white hover:scale-105'>
+                        <button 
+                        className='relative flex items-center justify-center gap-2 p-4 text-xl font-bold text-green-700 transition-all duration-700 hover:bg-green-700 bg-white/80 backdrop-blur-xl rounded-2xl hover:text-white hover:scale-105'>
                             <PiMicrosoftExcelLogoFill />
                             Exportar
                         </button>
@@ -89,7 +122,7 @@ function Facturas() {
                     <tbody className="text-center">
                         {facturas.map(fac => (
                             <tr key={fac.id} className="hover:bg-gray-700">
-                                <td className="px-4 py-2 border border-white">{fac.fechaHora}</td>
+                                <td className="px-4 py-2 border border-white">{formatearFechaDesdeISO(fac.fechaHora)}</td>
                                 <td className="px-4 py-2 border border-white">{fac.id}</td>
                                 <td className="px-4 py-2 border border-white">{fac.total}</td>
                                 <td className="px-4 py-2 border border-white">{fac.estado}</td>
