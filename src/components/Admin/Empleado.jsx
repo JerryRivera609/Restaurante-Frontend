@@ -75,7 +75,10 @@ function Empleado() {
                     <p className="text-sm text-gray-100">Información de los Empleados</p>
                 </div>
                 <div>
-                    
+                    <button className='relative backdrop-blur-xl text-white font-semibold p-4 gap-2 rounded-2xl flex items-center bg-white/20 justify-center transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-4px_5px_rgba(255,255,255,0.9)]'>
+                        <FaUserPlus />
+                        Añadir
+                    </button>
                 </div>
             </section>
 
