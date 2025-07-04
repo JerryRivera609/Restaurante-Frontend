@@ -40,7 +40,14 @@ function Empleado() {
 
     const handleActualizarEmpleado = async (e) => {
         e.preventDefault();
-        
+        try {
+            const response = await fetch("http://localhost:8080/api/empleado/actualizar", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(empleadoEditando)
+            });
 
             if (!response.ok) throw new Error("Error al actualizar");
 
