@@ -41,7 +41,7 @@ function Empleado() {
     const handleActualizarEmpleado = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/api/empleado/actualizar", {
+            const response = await fetch(`http://localhost:8080/api/empleado/${empleadoEditando.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -162,9 +162,13 @@ function Empleado() {
                                     }
                                     className="w-full px-2 py-1 border rounded"
                                 >
-                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="ADMINISTRADOR">ADMINISTRADOR</option>
                                     <option value="CAJERO">CAJERO</option>
-                                    <option value="MESERO">MESERO</option>
+                                    <option value="MOZO">MOZO</option>
+                                    <option value="BAR">BAR</option>
+                                    <option value="COCINA">COCINA</option>
+                                    <option value="FRIOS">FRIOS</option>
+
                                 </select>
                             </div>
                             <div className="flex justify-end gap-2">
