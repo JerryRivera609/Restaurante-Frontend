@@ -12,11 +12,12 @@ function Empleado() {
 
     useEffect(() => {
         fetch("http://localhost:8080/api/empleado")
-            .then(res => res.json())
-            .then(data => {
-                setEmpleados(data);
-                setLoanding(false);
-            });
+        .then(res => res.json())
+        .then(data => {
+            const empleadosActivos = data.filter(emp => emp.activo);
+            setEmpleados(empleadosActivos);
+            setLoanding(false);
+        });
 
         if (!stompClient.active) {
             stompClient.activate();
@@ -29,10 +30,11 @@ function Empleado() {
                 setEmpleados(prevEmpleados =>
                     prevEmpleados.map(emp =>
                         emp.id === empleadoActualizado.id ? empleadoActualizado : emp
-                    )
+                    ).filter(emp => emp.activo) // Solo mantener los activos
                 );
             });
         };
+        
         return () => {
             stompClient.deactivate();
         };
@@ -53,7 +55,7 @@ function Empleado() {
 
             const actualizado = await response.json();
 
-            // Opcional: actualizar localmente (aunque ya lo haces con websocket)
+            // Opcional: actualizar localmente
             setEmpleados(prev =>
                 prev.map(emp => emp.id === actualizado.id ? actualizado : emp)
             );
@@ -65,6 +67,28 @@ function Empleado() {
             alert("Hubo un error al actualizar");
         }
     };
+
+    const handleDesactivarEmpleado = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/empleado/desactivar/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            if (!response.ok) throw new Error("Error al desactivar");
+    
+            alert("Empleado desactivado correctamente");
+    
+            //liminarlo localmente para que desaparezca sin recargar
+            setEmpleados(prev => prev.filter(emp => emp.id !== id));
+        } catch (error) {
+            console.error(error);
+            alert("Hubo un error al desactivar el empleado");
+        }
+    };
+    
 
 
     return (
@@ -108,7 +132,9 @@ function Empleado() {
                                     >
                                         Editar
                                     </button>
-                                    <button className="px-3 py-1 text-sm bg-red-600 rounded hover:bg-red-700">
+                                    <button className="px-3 py-1 text-sm bg-red-600 rounded hover:bg-red-700"
+                                    onClick={() => handleDesactivarEmpleado(emp.id)}
+                                    >
                                         Borrar
                                     </button>
                                 </td>
