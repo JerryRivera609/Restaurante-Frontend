@@ -1,40 +1,34 @@
-import React from 'react';
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import stompClient from "../../config/websocket";
-
 import { FaUserPlus } from "react-icons/fa6";
 
 function Empleado() {
-
     const [empleados, setEmpleados] = useState([]);
     const [loanding, setLoanding] = useState(true);
     const [empleadoEditando, setEmpleadoEditando] = useState(null);
+    const [nuevoEmpleado, setNuevoEmpleado] = useState(null);
 
     useEffect(() => {
         fetch("http://localhost:8080/api/empleado")
-        .then(res => res.json())
-        .then(data => {
-            const empleadosActivos = data.filter(emp => emp.activo);
-            setEmpleados(empleadosActivos);
-            setLoanding(false);
-        });
+            .then(res => res.json())
+            .then(data => {
+                const activos = data.filter(emp => emp.activo);
+                setEmpleados(activos);
+                setLoanding(false);
+            });
 
-        if (!stompClient.active) {
-            stompClient.activate();
-        }
+        if (!stompClient.active) stompClient.activate();
 
         stompClient.onConnect = () => {
-            console.log("Conectado al websocket");
             stompClient.subscribe("/topic/empleados", message => {
-                const empleadoActualizado = JSON.parse(message.body);
-                setEmpleados(prevEmpleados =>
-                    prevEmpleados.map(emp =>
-                        emp.id === empleadoActualizado.id ? empleadoActualizado : emp
-                    ).filter(emp => emp.activo) // Solo mantener los activos
+                const actualizado = JSON.parse(message.body);
+                setEmpleados(prev =>
+                    prev.map(emp => emp.id === actualizado.id ? actualizado : emp)
+                        .filter(emp => emp.activo)
                 );
             });
         };
-        
+
         return () => {
             stompClient.deactivate();
         };
@@ -45,26 +39,16 @@ function Empleado() {
         try {
             const response = await fetch(`http://localhost:8080/api/empleado/${empleadoEditando.id}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(empleadoEditando)
             });
-
-            if (!response.ok) throw new Error("Error al actualizar");
-
+            if (!response.ok) throw new Error();
             const actualizado = await response.json();
-
-            // Opcional: actualizar localmente
-            setEmpleados(prev =>
-                prev.map(emp => emp.id === actualizado.id ? actualizado : emp)
-            );
-
+            setEmpleados(prev => prev.map(emp => emp.id === actualizado.id ? actualizado : emp));
             setEmpleadoEditando(null);
-            alert("Empleado actualizado correctamente");
-        } catch (error) {
-            console.error(error);
-            alert("Hubo un error al actualizar");
+            alert("Empleado actualizado");
+        } catch {
+            alert("Error al actualizar");
         }
     };
 
@@ -72,24 +56,33 @@ function Empleado() {
         try {
             const response = await fetch(`http://localhost:8080/api/empleado/desactivar/${id}`, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                headers: { "Content-Type": "application/json" }
             });
-    
-            if (!response.ok) throw new Error("Error al desactivar");
-    
-            alert("Empleado desactivado correctamente");
-    
-            //liminarlo localmente para que desaparezca sin recargar
+            if (!response.ok) throw new Error();
+            alert("Empleado desactivado");
             setEmpleados(prev => prev.filter(emp => emp.id !== id));
-        } catch (error) {
-            console.error(error);
-            alert("Hubo un error al desactivar el empleado");
+        } catch {
+            alert("Error al desactivar");
         }
     };
-    
 
+    const handleAgregarEmpleado = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:8080/api/empleado", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...nuevoEmpleado, activo: true })
+            });
+            if (!response.ok) throw new Error();
+            const creado = await response.json();
+            setEmpleados(prev => [...prev, creado]);
+            setNuevoEmpleado(null);
+            alert("Empleado agregado");
+        } catch {
+            alert("Error al agregar");
+        }
+    };
 
     return (
         <div className="p-6">
@@ -99,14 +92,15 @@ function Empleado() {
                     <p className="text-sm text-gray-100">Información de los Empleados</p>
                 </div>
                 <div>
-                    <button className='relative backdrop-blur-xl text-white font-semibold p-4 gap-2 rounded-2xl flex items-center bg-white/20 justify-center transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-4px_5px_rgba(255,255,255,0.9)]'>
+                    <button
+                        onClick={() => setNuevoEmpleado({ nombre: "", email: "", contrasenia: "", rol: "MOZO" })}
+                        className='relative backdrop-blur-xl text-white font-semibold p-4 gap-2 rounded-2xl flex items-center bg-white/20 justify-center transition-all duration-700 hover:bg-opacity-0 hover:shadow-[inset_10px_10px_10px_rgba(0,0,0,0.05),15px_25px_10px_rgba(0,0,0,0.05),15px_20px_20px_rgba(0,0,0,0.05),inset_0px_-4px_5px_rgba(255,255,255,0.9)]'>
                         <FaUserPlus />
                         Añadir
                     </button>
                 </div>
             </section>
 
-            {/* SECCI´´ÓN DE EMPLEADOS*/}
             <div className="w-full">
                 <table className="min-w-full text-white border border-white">
                     <thead className="bg-gray-800">
@@ -132,27 +126,33 @@ function Empleado() {
                                     >
                                         Editar
                                     </button>
-                                    <button className="px-3 py-1 text-sm bg-red-600 rounded hover:bg-red-700"
-                                    onClick={() => handleDesactivarEmpleado(emp.id)}
+                                    <button
+                                        onClick={() => handleDesactivarEmpleado(emp.id)}
+                                        className="px-3 py-1 text-sm bg-red-600 rounded hover:bg-red-700"
                                     >
-                                        Borrar
+                                        Desactivar
                                     </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                {empleadoEditando && (
+
+                {(empleadoEditando || nuevoEmpleado) && (
                     <div className="max-w-md p-4 mx-auto mt-8 text-black bg-white shadow rounded-xl">
-                        <h3 className="mb-4 text-xl font-semibold">Editar Empleado</h3>
-                        <form onSubmit={handleActualizarEmpleado}>
+                        <h3 className="mb-4 text-xl font-semibold">
+                            {empleadoEditando ? "Editar Empleado" : "Nuevo Empleado"}
+                        </h3>
+                        <form onSubmit={empleadoEditando ? handleActualizarEmpleado : handleAgregarEmpleado}>
                             <div className="mb-4">
                                 <label className="block mb-1">Nombre:</label>
                                 <input
                                     type="text"
-                                    value={empleadoEditando.nombre}
+                                    value={(empleadoEditando || nuevoEmpleado).nombre}
                                     onChange={(e) =>
-                                        setEmpleadoEditando({ ...empleadoEditando, nombre: e.target.value })
+                                        empleadoEditando
+                                            ? setEmpleadoEditando({ ...empleadoEditando, nombre: e.target.value })
+                                            : setNuevoEmpleado({ ...nuevoEmpleado, nombre: e.target.value })
                                     }
                                     className="w-full px-2 py-1 border rounded"
                                 />
@@ -161,9 +161,11 @@ function Empleado() {
                                 <label className="block mb-1">Correo:</label>
                                 <input
                                     type="email"
-                                    value={empleadoEditando.email}
+                                    value={(empleadoEditando || nuevoEmpleado).email}
                                     onChange={(e) =>
-                                        setEmpleadoEditando({ ...empleadoEditando, email: e.target.value })
+                                        empleadoEditando
+                                            ? setEmpleadoEditando({ ...empleadoEditando, email: e.target.value })
+                                            : setNuevoEmpleado({ ...nuevoEmpleado, email: e.target.value })
                                     }
                                     className="w-full px-2 py-1 border rounded"
                                 />
@@ -172,9 +174,11 @@ function Empleado() {
                                 <label className="block mb-1">Contraseña:</label>
                                 <input
                                     type="password"
-                                    value={empleadoEditando.contrasenia}
+                                    value={(empleadoEditando || nuevoEmpleado).contrasenia}
                                     onChange={(e) =>
-                                        setEmpleadoEditando({ ...empleadoEditando, contrasenia: e.target.value })
+                                        empleadoEditando
+                                            ? setEmpleadoEditando({ ...empleadoEditando, contrasenia: e.target.value })
+                                            : setNuevoEmpleado({ ...nuevoEmpleado, contrasenia: e.target.value })
                                     }
                                     className="w-full px-2 py-1 border rounded"
                                 />
@@ -182,9 +186,11 @@ function Empleado() {
                             <div className="mb-4">
                                 <label className="block mb-1">Rol:</label>
                                 <select
-                                    value={empleadoEditando.rol}
+                                    value={(empleadoEditando || nuevoEmpleado).rol}
                                     onChange={(e) =>
-                                        setEmpleadoEditando({ ...empleadoEditando, rol: e.target.value })
+                                        empleadoEditando
+                                            ? setEmpleadoEditando({ ...empleadoEditando, rol: e.target.value })
+                                            : setNuevoEmpleado({ ...nuevoEmpleado, rol: e.target.value })
                                     }
                                     className="w-full px-2 py-1 border rounded"
                                 >
@@ -194,13 +200,15 @@ function Empleado() {
                                     <option value="BAR">BAR</option>
                                     <option value="COCINA">COCINA</option>
                                     <option value="FRIOS">FRIOS</option>
-
                                 </select>
                             </div>
                             <div className="flex justify-end gap-2">
                                 <button
                                     type="button"
-                                    onClick={() => setEmpleadoEditando(null)}
+                                    onClick={() => {
+                                        setEmpleadoEditando(null);
+                                        setNuevoEmpleado(null);
+                                    }}
                                     className="px-4 py-2 text-white bg-gray-400 rounded"
                                 >
                                     Cancelar
@@ -209,13 +217,12 @@ function Empleado() {
                                     type="submit"
                                     className="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
                                 >
-                                    Actualizar
+                                    {empleadoEditando ? "Actualizar" : "Agregar"}
                                 </button>
                             </div>
                         </form>
                     </div>
                 )}
-
             </div>
         </div>
     );
